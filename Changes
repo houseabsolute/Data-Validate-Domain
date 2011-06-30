@@ -1,0 +1,54 @@
+Revision history for Perl extension Data::Validate::Domain.
+
+0.10  Mon Dec  29 2010
+	- Fixed bug 41033, no longer allows \n in domain_labels
+		Thanks to marek.miska@netart.pl for reporting the bug
+
+0.09  Mon Feb  18 2008
+	- Added new option of domain_allow_underscore to allow this module 
+	  to be used for validating domainnames like _spf.neely.cx if the option is set
+	  Default behavior was not changed
+
+0.08  Wed May  17 2007
+	- Ugh, forgot to add new tests to MANIFEST
+
+0.07  Wed May  17 2007
+        - Added POD testing, and minor cleanup related to that
+
+0.06  Wed May  16 2007
+	- Updated contact information to be neil@neely.cx, this is a purely cosmetic change
+
+0.05  Fri Dec  04 14:03:58 2006
+	- Added Support for compiled regular expressions to the private_domain_tld option.
+		- Thanks to Berhhard Graf <graf@augensalat.de> for the suggestion.
+
+0.04  Fri Dec  01 10:21:04 2006
+	- Added support for options to alter behavior of is_domain with these new
+	  options is_domain will be able to work with private domains with custom TLD's.
+		- Special Thanks to Len Reed <lreed@levanta.com> for not only suggesting
+		  the need for this but supplying several patches to help steer this
+		  solution in the right direction.  Also made several documentation 
+                  improvements. 
+		- Additional thanks to Richard Sonnen <sonnen@richardsonnen.com> for 
+		  helping flush out the details of how to utilize options in the 
+                  Data::Validate name space portably.
+	
+		
+
+0.03  Thu Nov  03 07:47:21 2005
+	- Updated to support new procedural version of Net::Domain::TLD
+		- Thanks to Ricardo Signes <rjbs@cpan.org> for letting me know about his new interface
+
+0.02  Fri Oct  28 12:46:51 2005
+	- added is_hostname method (which is valid for either somehost or somehost.domain.com)
+	- modified is_domain to verify TLD of domain supplied (Uses Net::Domain::TLD)
+	- Fixed bug that allowed domain.com... to return the same results as domain.com 
+	- Will no longer consider domain.com. to be valid
+
+		Thanks to Smylers <smylers@donhost.co.uk> for the detailed bug 
+		report and suggested fixes.
+
+0.01  Fri Mar  4 10:56:34 2005
+	- original version; created by h2xs 1.23 with options
+		-AXn Data::Validate::Domain
+

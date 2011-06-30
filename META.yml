@@ -1,0 +1,21 @@
+--- #YAML:1.0
+name:               Data-Validate-Domain
+version:            0.10
+abstract:           domain validation methods
+author:
+    - Neil Neely <neil@neely.cx>
+license:            perl
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    Net::Domain::TLD:  1.62
+    Test::More:        0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.46
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
