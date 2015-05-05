@@ -13,7 +13,8 @@ is( is_domain_label('COM'),   'COM',   'is_domain_label COM' );
 is( is_domain_label('128'),   '128',   'is_domain_label 128' );
 ok( !is_domain_label(q{}),    'is_domain_label ' );
 ok( !is_domain_label('-bob'), 'is_domain_label -bob' );
-ok( !is_domain_label("bengali-\x{09ea}"), 'bengali 4 is not accepted in domain label');
+ok( !is_domain_label("bengali-\x{09ea}"),
+    'bengali 4 is not accepted in domain label' );
 
 #70 character label
 isnt(
@@ -46,7 +47,8 @@ ok( !is_domain('com'),           'is_domain com' );
 ok( !is_domain('net'),           'is_domain net' );
 ok( !is_domain('uk'),            'is_domain uk' );
 is( is_domain('co.uk'), 'co.uk', 'is_domain co.uk' );
-ok( !is_domain("bengali-\x{09ea}.com"), 'bengali 4 is not accepted in domain');
+ok( !is_domain("bengali-\x{09ea}.com"),
+    'bengali 4 is not accepted in domain' );
 
 #280+ character domain
 ok(

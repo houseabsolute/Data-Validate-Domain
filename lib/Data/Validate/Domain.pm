@@ -119,18 +119,16 @@ can supply a precompiled regular expression.
 NOTE:  The TLD is normalized to the lower case form prior to the check being done.  This is
 done only for the TLD check, and does not alter the output in any way.
 
-	The hash reference example:	
+The hash reference example:
 
-		domain_private_tld => {
-			'privatetld1 '   =>      1,
-			'privatetld2'    =>      1,
-		}
+  domain_private_tld => {
+      privatetld1 => 1,
+      privatetld2 => 1,
+  }
 
-	The precompiled regualar expression example:
+The precompiled regualar expression example:
 
-		domain_private_tld 	  => qr /^(?:privatetld1|privatetld2)$/,
-
-
+ domain_private_tld => qr /^(?:privatetld1|privatetld2)$/,
 
 =back
 
@@ -433,7 +431,8 @@ sub is_domain_label {
                 = $value =~ /^([0-9A-Za-z\_][0-9A-Za-z\-\_]*[0-9A-Za-z])$/;
         }
         else {
-            ($hostname) = $value =~ /^([0-9A-Za-z][0-9A-Za-z\-]*[0-9A-Za-z])$/;
+            ($hostname)
+                = $value =~ /^([0-9A-Za-z][0-9A-Za-z\-]*[0-9A-Za-z])$/;
         }
     }
     else {
