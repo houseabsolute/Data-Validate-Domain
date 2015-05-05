@@ -478,24 +478,10 @@ B<[RFC 1034] [RFC 1035] [RFC 2181] [RFC 1123]>
 
 =back
 
-
-=head1 AUTHOR
-
-Neil Neely <F<neil@neely.cx>>.
-
 =head1 ACKNOWLEDGEMENTS
 
 Thanks to Richard Sonnen <F<sonnen@richardsonnen.com>> for writing the Data::Validate module.
 
 Thanks to Len Reed <F<lreed@levanta.com>> for helping develop the options mechanism for Data::Validate modules.
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (c) 2005-2007 Neil Neely.
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.2 or,
-at your option, any later version of Perl 5 you may have available.
-
 
 =cut
