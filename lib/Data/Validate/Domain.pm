@@ -16,131 +16,6 @@ our @EXPORT = qw(
 
 our $VERSION = '0.10';
 
-=head1 NAME
-
-Data::Validate::Domain - domain validation methods
-
-=for test_synopsis my ($suspect, %options);
-
-=head1 SYNOPSIS
-
-  use Data::Validate::Domain qw(is_domain);
-
-  # as a function
-  my $test = is_domain($suspect);
-  die "$test is not a domain" unless $test;
-
-  # or
-
-  die "$test is not a domain" unless is_domain($suspect, \%options);
-
-  # or as an object
-  my $v = Data::Validate::Domain->new(%options);
-
-  die "$test is not a domain" unless $v->is_domain($suspect);
-
-=head1 DESCRIPTION
-
-This module collects domain validation routines to make input validation,
-and untainting easier and more readable.
-
-All functions return an untainted value if the test passes, and undef if
-it fails.  This means that you should always check for a defined status explicitly.
-Don't assume the return will be true. (e.g. is_username('0'))
-
-The value to test is always the first (and often only) argument.
-
-=head1 FUNCTIONS
-
-=over 4
-
-=item B<new> - constructor for OO usage
-
-  $obj = Data::Validate::Domain->new();
-  my %options = (
-		domain_allow_underscore => 1,
-  );
-
-  or
-
-  my %options = (
-		domain_allow_single_label => 1,
-		domain_private_tld => {
-			'privatetld1 '   =>      1,
-			'privatetld2'    =>      1,
-		}
-  );
-
-  or
-
-  my %options = (
-		domain_allow_single_label => 1,
-		domain_private_tld 	  => qr /^(?:privatetld1|privatetld2)$/,
-  );
-
-
-
-
-  $obj = Data::Validate::Domain->new(%options);
-
-
-=over 4
-
-=item I<Description>
-
-Returns a Data::Validator::Domain object.  This lets you access all the validator function
-calls as methods without importing them into your namespace or using the clumsy
-Data::Validate::Domain::function_name() format.
-
-=item I<Options>
-
-=over 4
-
-=item	B<domain_allow_underscore>
-
-According to RFC underscores are forbidden in hostnames but not domain names.
-By default is_domain,is_domain_label, and is_hostname will fail if you include
-underscores, setting this to a true value with authorize the use of
-underscores in all functions.
-
-=item	B<domain_allow_single_label>
-
-By default is_domain will fail if you ask it to verify a domain that only has a single label
-i.e. 'neely.cx' is good, but 'com' would fail.  If you set this option to a true value then
-is_domain will allow single label domains through.  This is most likely to be useful in
-combination with B<domain_private_tld>
-
-=item B<domain_private_tld>
-
-By default is_domain requires all domains to have a valid TLD (i.e. com, net, org, uk, etc),
-this is verified using the Net::Domain::TLD module.  This behavior can be extended in two
-different ways.  Either a hash reference can be supplied keyed by the additional TLD's, or you
-can supply a precompiled regular expression.
-
-NOTE:  The TLD is normalized to the lower case form prior to the check being done.  This is
-done only for the TLD check, and does not alter the output in any way.
-
-The hash reference example:
-
-  domain_private_tld => {
-      privatetld1 => 1,
-      privatetld2 => 1,
-  }
-
-The precompiled regualar expression example:
-
- domain_private_tld => qr /^(?:privatetld1|privatetld2)$/,
-
-=back
-
-=item I<Returns>
-
-Returns a Data::Validate::Domain object
-
-=back
-
-=cut
-
 sub new {
     my $class = shift;
 
@@ -148,93 +23,6 @@ sub new {
 }
 
 # -------------------------------------------------------------------------------
-
-=pod
-
-=item B<is_domain> - does the value look like a domain name?
-
-  is_domain($value);
-  or
-  $obj->is_domain($value);
-  or
-  is_domain($value,\%options);
-  or
-  $obj->is_domain($value,\%options);
-
-
-=over 4
-
-=item I<Description>
-
-Returns the untainted domain name if the test value appears to be a well-formed
-domain name.
-
-Note:  See B<new> for list of options and how those alter the behavior of this
-function.
-
-=item I<Arguments>
-
-=over 4
-
-=item $value
-
-The potential domain to test.
-
-=back
-
-=item I<Returns>
-
-Returns the untainted domain on success, undef on failure.
-
-=item I<Notes, Exceptions, & Bugs>
-
-The function does not make any attempt to check whether a domain
-actually exists. It only looks to see that the format is appropriate.
-
-A dotted quad (such as 127.0.0.1) is not considered a domain and will return false.
-See L<Data::Validate::IP(3)> for IP Validation.
-
-Performs a lookup via Net::Domain::TLD to verify that the TLD is valid for this domain.
-
-Does not consider "domain.com." a valid format.
-
-=item I<From RFC 952>
-
-   A "name" (Net, Host, Gateway, or Domain name) is a text string up
-   to 24 characters drawn from the alphabet (A-Z), digits (0-9), minus
-   sign (-), and period (.).  Note that periods are only allowed when
-   they serve to delimit components of "domain style names".
-
-   No blank or space characters are permitted as part of a
-   name. No distinction is made between upper and lower case.  The first
-   character must be an alpha character [Relaxed in RFC 1123] .  The last
-   character must not be a minus sign or period.
-
-=item I<From RFC 1035>
-
-    labels          63 octets or less
-    names           255 octets or less
-
-    [snip] limit the label to 63 octets or less.
-
-    To simplify implementations, the total length of a domain name (i.e.,
-    label octets and label length octets) is restricted to 255 octets or
-    less.
-
-=item I<From RFC 1123>
-
-    One aspect of host name syntax is hereby changed: the
-    restriction on the first character is relaxed to allow either a
-    letter or a digit.  Host software MUST support this more liberal
-    syntax.
-
-    Host software MUST handle host names of up to 63 characters and
-    SHOULD handle host names of up to 255 characters.
-
-
-=back
-
-=cut
 
 sub is_domain {
     my ( $value, $opt ) = _maybe_oo(@_);
@@ -286,58 +74,6 @@ sub is_domain {
 
 # -------------------------------------------------------------------------------
 
-=pod
-
-=item B<is_hostname> - does the value look like a hostname
-
-  is_hostname($value);
-  or
-  $obj->is_hostname($value);
-  or
-  is_hostname($value,\%options);
-  or
-  $obj->is_hostname($value,\%options);
-
-
-=over 4
-
-=item I<Description>
-
-Returns the untainted hostname if the test value appears to be a well-formed
-hostname.
-
-Note:  See B<new> for list of options and how those alter the behavior of this
-function.
-
-=item I<Arguments>
-
-=over 4
-
-=item $value
-
-The potential hostname to test.
-
-=back
-
-=item I<Returns>
-
-Returns the untainted hostname on success, undef on failure.
-
-=item I<Notes, Exceptions, & Bugs>
-
-The function does not make any attempt to check whether a hostname
-actually exists. It only looks to see that the format is appropriate.
-
-Functions much like is_domain, except that it does not verify whether or
-not a valid TLD has been supplied and allows for there to only
-be a single component of the hostname (i.e www)
-
-Hostnames might or might not have a valid TLD attached.
-
-=back
-
-=cut
-
 sub is_hostname {
     my ( $value, $opt ) = _maybe_oo(@_);
 
@@ -361,50 +97,6 @@ sub is_hostname {
     return join( '.', @bits );
 
 }
-
-=pod
-
-=item B<is_domain_label> - does the value look like a domain label?
-
-  is_domain_label($value);
-  or
-  $obj->is_domain_label($value);
-  or
-  is_domain_label($value,\%options);
-  or
-  $obj->is_domain_label($value,\%options);
-
-
-=over 4
-
-=item I<Description>
-
-Returns the untainted domain label if the test value appears to be a well-formed
-domain label.
-
-Note:  See B<new> for list of options and how those alter the behavior of this
-function.
-
-=item I<Arguments>
-
-=over 4
-
-=item $value
-
-The potential ip to test.
-
-=back
-
-=item I<Returns>
-
-Returns the untainted domain label on success, undef on failure.
-
-=item I<Notes, Exceptions, & Bugs>
-
-The function does not make any attempt to check whether a domain label
-actually exists. It only looks to see that the format is appropriate.
-
-=cut
 
 sub is_domain_label {
     my ( $value, $opt ) = _maybe_oo(@_);
@@ -452,19 +144,170 @@ sub _maybe_oo {
 }
 
 1;
+
+# ABSTRACT: Domain and host name validation
+
 __END__
-#
-
-
-
-# -------------------------------------------------------------------------------
 
 =pod
 
+=for test_synopsis my ($suspect, %options);
+
+=head1 SYNOPSIS
+
+  use Data::Validate::Domain qw(is_domain);
+
+  # as a function
+  my $test = is_domain($suspect);
+  die "$test is not a domain" unless $test;
+
+  # or
+
+  die "$test is not a domain" unless is_domain($suspect, \%options);
+
+  # or as an object
+  my $v = Data::Validate::Domain->new(%options);
+
+  die "$test is not a domain" unless $v->is_domain($suspect);
+
+=head1 DESCRIPTION
+
+This module offers a few subroutines for validating domain and host names.
+
+=head1 FUNCTIONS
+
+All of the functions below are exported by default.
+
+All of the functions return an untainted value on success and a false value
+(C<undef> or an empty list) on failure. In scalar context, you should check
+that the return value is defined, because something like
+C<is_domain_label('0')> will return a defined but false value.
+
+The value to test is always the first (and often only) argument.
+
+Note that none of these functions test whether a domain or hostname is
+actually resolvable or reachable.
+
+=head2 Data::Validate::Domain->new()
+
+This method constructs a validation object. It accepts the following arguments:
+
+=over 4
+
+=item * domain_allow_underscore
+
+According to RFC underscores are forbidden in hostnames but not domain names.
+By default C<is_domain()>, C<is_domain_label()>, and C<is_hostname()> will
+fail if the value to be checked includes underscores. Setting this to a true
+value with allow the use of underscores in all functions.
+
+=item * domain_allow_single_label
+
+By default C<is_domain()> will fail if you ask it to verify a domain that only
+has a single label i.e. "neely.cx" is good, but "com" would fail. If you set
+this option to a true value then C<is_domain()> will allow single label
+domains through. This is most likely to be useful in combination with
+the C<domain_private_tld> argument.
+
+=item * domain_private_tld
+
+By default C<is_domain()> requires all domains to have a valid public TLD
+(i.e. com, net, org, uk, etc). This is verified using the L<Net::Domain::TLD>
+module. This behavior can be extended in two different ways. You can provide
+either a hash reference where additional TLDs are keys or you can supply a
+regular expression.
+
+NOTE: The TLD is normalized to the lower case form prior to the check being
+done. This is done only for the TLD check, and does not alter the output in
+any way.
+
+Hashref example:
+
+  domain_private_tld => {
+      privatetld1 => 1,
+      privatetld2 => 1,
+  }
+
+Regular expression example:
+
+ domain_private_tld => qr /^(?:privatetld1|privatetld2)$/,
 
 =back
 
+=head2 is_domain($domain, \%options)
+
+This can be called as either a subroutine or a method. If called as a sub, you
+can pass any of the arguments accepted by the constructor as options. If
+called as a method, any additional options are ignored.
+
+This returns the untainted domain name if the given C<$domain> is a valid
+domain.
+
+A dotted quad (such as 127.0.0.1) is not considered a domain and will return false.
+See L<Data::Validate::IP> for IP Validation.
+
+This sub does not consider a value ending a period (i.e. "domain.com.") to be
+a valid domain.
+
+=over 4
+
+=item I<From RFC 952>
+
+   A "name" (Net, Host, Gateway, or Domain name) is a text string up
+   to 24 characters drawn from the alphabet (A-Z), digits (0-9), minus
+   sign (-), and period (.). Note that periods are only allowed when
+   they serve to delimit components of "domain style names".
+
+   No blank or space characters are permitted as part of a
+   name. No distinction is made between upper and lower case. The first
+   character must be an alpha character [Relaxed in RFC 1123] . The last
+   character must not be a minus sign or period.
+
+=item I<From RFC 1035>
+
+    labels          63 octets or less
+    names           255 octets or less
+
+    [snip] limit the label to 63 octets or less.
+
+    To simplify implementations, the total length of a domain name (i.e.,
+    label octets and label length octets) is restricted to 255 octets or
+    less.
+
+=item I<From RFC 1123>
+
+    One aspect of host name syntax is hereby changed: the
+    restriction on the first character is relaxed to allow either a
+    letter or a digit. Host software MUST support this more liberal
+    syntax.
+
+    Host software MUST handle host names of up to 63 characters and
+    SHOULD handle host names of up to 255 characters.
+
 =back
+
+=head2 is_hostname($hostname, \%options)
+
+This can be called as either a subroutine or a method. If called as a sub, you
+can pass any of the arguments accepted by the constructor as options. If
+called as a method, any additional options are ignored.
+
+This returns the untainted hostname if the given C<$hostname> is a valid
+hostname.
+
+Hostnames are not required to end in a valid TLD.
+
+=head2 is_domain_label($label, \%options)
+
+This can be called as either a subroutine or a method. If called as a sub, you
+can pass any of the arguments accepted by the constructor as options. If
+called as a method, any additional options are ignored.
+
+This returns the untainted label if the given C<$label> is a valid
+label.
+
+A domain label is simply a single piece of a domain or hostname. For example,
+the "www.foo.com" hostname contains the labels "www", "foo", and "com".
 
 =head1 SEE ALSO
 
@@ -485,3 +328,4 @@ Thanks to Richard Sonnen <F<sonnen@richardsonnen.com>> for writing the Data::Val
 Thanks to Len Reed <F<lreed@levanta.com>> for helping develop the options mechanism for Data::Validate modules.
 
 =cut
+
