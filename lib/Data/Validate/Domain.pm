@@ -237,8 +237,7 @@ Does not consider "domain.com." a valid format.
 =cut
 
 sub is_domain {
-    my $self = shift if ref( $_[0] );
-    my $value = shift;
+    my ( $value, $opt ) = _maybe_oo(@_);
 
     return unless defined($value);
 
@@ -342,12 +341,9 @@ Hostnames might or might not have a valid TLD attached.
 =cut
 
 sub is_hostname {
-    my $self = shift if ref( $_[0] );
-    my $value = shift;
+    my ( $value, $opt ) = _maybe_oo(@_);
 
     return unless defined($value);
-
-    my $opt = ( defined $self ) ? $self : (shift);
 
     my $length = length($value);
     return unless ( $length > 0 && $length <= 255 );
@@ -413,15 +409,12 @@ actually exists. It only looks to see that the format is appropriate.
 =cut
 
 sub is_domain_label {
-    my $self = shift if ref( $_[0] );
-    my $value = shift;
+    my ( $value, $opt ) = _maybe_oo(@_);
 
     return unless defined($value);
 
     #Fix Bug: 41033
     return if ( $value =~ /\n/ );
-
-    my $opt = ( defined $self ) ? $self : (shift);
 
     # bail if we are dealing with more then just a hostname
     return if ( $value =~ /\./ );
@@ -448,6 +441,15 @@ sub is_domain_label {
         return;
     }
     return $hostname;
+}
+
+sub _maybe_oo {
+    if ( ref $_[0] ) {
+        return @_[ 1, 0 ];
+    }
+    else {
+        return @_[ 0, 1 ];
+    }
 }
 
 1;
