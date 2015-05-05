@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.11     2015-05-05
     - Don't allow non-ASCII digits in domain labels, RT #103121.
 
 0.10     2010-12-29
