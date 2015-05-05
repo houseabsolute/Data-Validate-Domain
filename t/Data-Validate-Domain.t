@@ -1,11 +1,9 @@
+use strict;
+use warnings;
+
 use Test::More;
 
-BEGIN {
-    use_ok(
-        'Data::Validate::Domain',
-        qw(is_hostname is_domain is_domain_label)
-    );
-}
+use Data::Validate::Domain;
 
 is( 'www',   is_domain_label('www'),   'is_domain_label www' );
 is( 'w-w',   is_domain_label('w-w'),   'is_domain_label w-w' );
@@ -13,7 +11,7 @@ is( 'neely', is_domain_label('neely'), 'is_domain_label neely' );
 is( 'com',   is_domain_label('com'),   'is_domain_label com' );
 is( 'COM',   is_domain_label('COM'),   'is_domain_label COM' );
 is( '128',   is_domain_label('128'),   'is_domain_label 128' );
-is( undef,   is_domain_label(''),      'is_domain_label ' );
+is( undef,   is_domain_label(q{}),     'is_domain_label ' );
 is( undef,   is_domain_label('-bob'),  'is_domain_label -bob' );
 
 #70 character label

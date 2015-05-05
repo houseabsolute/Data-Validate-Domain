@@ -7,6 +7,7 @@ use Net::Domain::TLD qw(tld_exists);
 
 use Exporter qw( import );
 
+## no critic (Modules::ProhibitAutomaticExportation)
 our @EXPORT = qw(
     is_domain
     is_hostname
@@ -241,18 +242,16 @@ sub is_domain {
 
     return unless defined($value);
 
-    my $opt = ( defined $self ) ? $self : (shift);
-
     my $length = length($value);
     return unless ( $length > 0 && $length <= 255 );
 
     my @bits;
-    foreach my $label ( split( '\.', $value, -1 ) ) {
+    foreach my $label ( split /\./, $value, -1 ) {
         my $bit = is_domain_label( $label, $opt );
         return unless defined $bit;
         push( @bits, $bit );
     }
-    my $tld = $bits[$#bits];
+    my $tld = $bits[-1];
 
     #domain_allow_single_label set to true disables this check
     unless ( defined $opt && $opt->{domain_allow_single_label} ) {
@@ -352,7 +351,7 @@ sub is_hostname {
 
     #Anything past here has multiple bits in it
     my @bits;
-    foreach my $label ( split( '\.', $value, -1 ) ) {
+    foreach my $label ( split /\./, $value, -1 ) {
         my $bit = is_domain_label( $label, $opt );
         return unless defined $bit;
         push( @bits, $bit );

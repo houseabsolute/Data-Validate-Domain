@@ -42,6 +42,8 @@ severity = 3
 [Variables::ProhibitPackageVars]
 add_packages = Carp Test::Builder
 
+[-ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions]
+
 [-Subroutines::RequireFinalReturn]
 
 [-ErrorHandling::RequireCarping]
@@ -56,3 +58,4 @@ add_packages = Carp Test::Builder
 
 # "use v5.14" is more readable than "use 5.014"
 [-ValuesAndExpressions::ProhibitVersionStrings]
+
