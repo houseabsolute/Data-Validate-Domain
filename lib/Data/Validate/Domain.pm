@@ -421,19 +421,19 @@ sub is_domain_label {
     my $hostname;
     if ( $length == 1 ) {
         if ( defined $opt && $opt->{domain_allow_underscore} ) {
-            ($hostname) = $value =~ /^([\dA-Za-z\_])$/;
+            ($hostname) = $value =~ /^([0-9A-Za-z\_])$/;
         }
         else {
-            ($hostname) = $value =~ /^([\dA-Za-z])$/;
+            ($hostname) = $value =~ /^([0-9A-Za-z])$/;
         }
     }
     elsif ( $length > 1 && $length <= 63 ) {
         if ( defined $opt && $opt->{domain_allow_underscore} ) {
             ($hostname)
-                = $value =~ /^([\dA-Za-z\_][\dA-Za-z\-\_]*[\dA-Za-z])$/;
+                = $value =~ /^([0-9A-Za-z\_][0-9A-Za-z\-\_]*[0-9A-Za-z])$/;
         }
         else {
-            ($hostname) = $value =~ /^([\dA-Za-z][\dA-Za-z\-]*[\dA-Za-z])$/;
+            ($hostname) = $value =~ /^([0-9A-Za-z][0-9A-Za-z\-]*[0-9A-Za-z])$/;
         }
     }
     else {

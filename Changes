@@ -1,5 +1,7 @@
 Revision history for Perl extension Data::Validate::Domain.
 
+    - Don't allow non-ASCII digits in domain labels, RT #103121.
+
 0.10  Mon Dec  29 2010
 	- Fixed bug 41033, no longer allows \n in domain_labels
 		Thanks to marek.miska@netart.pl for reporting the bug
