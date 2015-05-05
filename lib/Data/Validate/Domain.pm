@@ -144,11 +144,7 @@ Returns a Data::Validate::Domain object
 sub new {
     my $class = shift;
 
-    my $self = bless {}, ref($class) || $class;
-
-    %{$self} = @_;
-
-    return $self;
+    return bless {@_}, ref($class) || $class;
 }
 
 # -------------------------------------------------------------------------------
