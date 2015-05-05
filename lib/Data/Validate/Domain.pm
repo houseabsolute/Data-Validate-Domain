@@ -14,7 +14,7 @@ our @EXPORT = qw(
     is_domain_label
 );
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 sub new {
     my $class = shift;
