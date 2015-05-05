@@ -98,9 +98,10 @@ Data::Validate::Domain::function_name() format.
 
 =item	B<domain_allow_underscore>
 
-According to RFC underscores are forbidden in "hostnames" but not "domainnames".
-By default is_domain,is_domain_label,  and is_hostname will fail if you include underscores, setting
-this to a true value with authorize the use of underscores in all functions.
+According to RFC underscores are forbidden in hostnames but not domain names.
+By default is_domain,is_domain_label, and is_hostname will fail if you include
+underscores, setting this to a true value with authorize the use of
+underscores in all functions.
 
 =item	B<domain_allow_single_label>
 
