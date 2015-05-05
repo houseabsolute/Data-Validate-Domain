@@ -5,9 +5,7 @@ use warnings;
 
 use Net::Domain::TLD qw(tld_exists);
 
-require Exporter;
-
-our @ISA = qw(Exporter);
+use Exporter qw( import );
 
 our @EXPORT = qw(
     is_domain
