@@ -197,7 +197,7 @@ Returns the untainted domain name if the test value appears to be a well-formed
 domain name. 
 
 Note:  See B<new> for list of options and how those alter the behavior of this 
-funciton.
+function.
 
 =item I<Arguments>
 
@@ -335,7 +335,7 @@ Returns the untainted hostname if the test value appears to be a well-formed
 hostname. 
 
 Note:  See B<new> for list of options and how those alter the behavior of this 
-funciton.
+function.
 
 =item I<Arguments>
 
@@ -414,7 +414,7 @@ Returns the untainted domain label if the test value appears to be a well-formed
 domain label. 
 
 Note:  See B<new> for list of options and how those alter the behavior of this 
-funciton.
+function.
 
 =item I<Arguments>
 
