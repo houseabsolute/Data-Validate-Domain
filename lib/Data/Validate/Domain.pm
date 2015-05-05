@@ -472,9 +472,9 @@ B<[RFC 1034] [RFC 1035] [RFC 2181] [RFC 1123]>
 
 =over 4
 
-=item  L<Data::Validate(3)>
+=item  L<Data::Validate>
 
-=item  L<Data::Validate::IP(3)>
+=item  L<Data::Validate::IP>
 
 =back
 
