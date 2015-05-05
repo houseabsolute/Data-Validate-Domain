@@ -1,5 +1,4 @@
-Revision history for Perl extension Data::Validate::Domain.
-
+{{$NEXT}}
     - Don't allow non-ASCII digits in domain labels, RT #103121.
 
 0.10  Mon Dec  29 2010
