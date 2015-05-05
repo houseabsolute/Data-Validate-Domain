@@ -20,24 +20,24 @@ our $VERSION = '0.10';
 
 Data::Validate::Domain - domain validation methods
 
+=for test_synopsis my ($suspect, %options);
+
 =head1 SYNOPSIS
 
   use Data::Validate::Domain qw(is_domain);
 
   # as a function
   my $test = is_domain($suspect);
-  die "$test is not a domain" unless defined $test;
+  die "$test is not a domain" unless $test;
 
   # or
 
-  my $test = is_domain($suspect, \%options);
-  die "$test is not a domain" unless defined $test;
+  die "$test is not a domain" unless is_domain($suspect, \%options);
 
   # or as an object
   my $v = Data::Validate::Domain->new(%options);
 
-  my $test = $v->is_domain($suspect);
-  die "$test is not a domain" unless defined $test;
+  die "$test is not a domain" unless $v->is_domain($suspect);
 
 =head1 DESCRIPTION
 
