@@ -10,9 +10,9 @@ require Exporter;
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(
-	is_domain
-	is_hostname
-	is_domain_label
+    is_domain
+    is_hostname
+    is_domain_label
 );
 
 our $VERSION = '0.10';
@@ -24,16 +24,15 @@ Data::Validate::Domain - domain validation methods
 =head1 SYNOPSIS
 
   use Data::Validate::Domain qw(is_domain);
- 
-  # as a function 
+
+  # as a function
   my $test = is_domain($suspect);
   die "$test is not a domain" unless defined $test;
 
-  or
+  # or
 
-  my $test = is_domain($suspect,\%options);
+  my $test = is_domain($suspect, \%options);
   die "$test is not a domain" unless defined $test;
-  
 
   # or as an object
   my $v = Data::Validate::Domain->new(%options);
@@ -44,7 +43,7 @@ Data::Validate::Domain - domain validation methods
 =head1 DESCRIPTION
 
 This module collects domain validation routines to make input validation,
-and untainting easier and more readable. 
+and untainting easier and more readable.
 
 All functions return an untainted value if the test passes, and undef if
 it fails.  This means that you should always check for a defined status explicitly.
@@ -101,14 +100,14 @@ Data::Validate::Domain::function_name() format.
 =item	B<domain_allow_underscore>
 
 According to RFC underscores are forbidden in "hostnames" but not "domainnames".
-By default is_domain,is_domain_label,  and is_hostname will fail if you include underscores, setting 
-this to a true value with authorize the use of underscores in all functions. 
+By default is_domain,is_domain_label,  and is_hostname will fail if you include underscores, setting
+this to a true value with authorize the use of underscores in all functions.
 
 =item	B<domain_allow_single_label>
 
 By default is_domain will fail if you ask it to verify a domain that only has a single label
 i.e. 'neely.cx' is good, but 'com' would fail.  If you set this option to a true value then
-is_domain will allow single label domains through.  This is most likely to be useful in 
+is_domain will allow single label domains through.  This is most likely to be useful in
 combination with B<domain_private_tld>
 
 =item B<domain_private_tld>
@@ -116,9 +115,9 @@ combination with B<domain_private_tld>
 By default is_domain requires all domains to have a valid TLD (i.e. com, net, org, uk, etc),
 this is verified using the Net::Domain::TLD module.  This behavior can be extended in two
 different ways.  Either a hash reference can be supplied keyed by the additional TLD's, or you
-can supply a precompiled regular expression.  
+can supply a precompiled regular expression.
 
-NOTE:  The TLD is normalized to the lower case form prior to the check being done.  This is 
+NOTE:  The TLD is normalized to the lower case form prior to the check being done.  This is
 done only for the TLD check, and does not alter the output in any way.
 
 	The hash reference example:	
@@ -144,20 +143,15 @@ Returns a Data::Validate::Domain object
 
 =cut
 
+sub new {
+    my $class = shift;
 
+    my $self = bless {}, ref($class) || $class;
 
+    %{$self} = @_;
 
-sub new{
-        my $class = shift;
-
-        my $self = bless {}, ref($class) || $class;
-
-	%{$self} = @_;
-        
-        return $self;	
+    return $self;
 }
-
-
 
 # -------------------------------------------------------------------------------
 
@@ -179,9 +173,9 @@ sub new{
 =item I<Description>
 
 Returns the untainted domain name if the test value appears to be a well-formed
-domain name. 
+domain name.
 
-Note:  See B<new> for list of options and how those alter the behavior of this 
+Note:  See B<new> for list of options and how those alter the behavior of this
 function.
 
 =item I<Arguments>
@@ -200,7 +194,7 @@ Returns the untainted domain on success, undef on failure.
 
 =item I<Notes, Exceptions, & Bugs>
 
-The function does not make any attempt to check whether a domain  
+The function does not make any attempt to check whether a domain
 actually exists. It only looks to see that the format is appropriate.
 
 A dotted quad (such as 127.0.0.1) is not considered a domain and will return false.
@@ -219,7 +213,7 @@ Does not consider "domain.com." a valid format.
 
    No blank or space characters are permitted as part of a
    name. No distinction is made between upper and lower case.  The first
-   character must be an alpha character [Relaxed in RFC 1123] .  The last 
+   character must be an alpha character [Relaxed in RFC 1123] .  The last
    character must not be a minus sign or period.
 
 =item I<From RFC 1035>
@@ -249,52 +243,54 @@ Does not consider "domain.com." a valid format.
 =cut
 
 sub is_domain {
-        my $self = shift if ref($_[0]); 
-        my $value = shift;
+    my $self = shift if ref( $_[0] );
+    my $value = shift;
 
-        
-        return unless defined($value);
+    return unless defined($value);
 
-	my $opt = (defined $self)?$self:(shift);
+    my $opt = ( defined $self ) ? $self : (shift);
 
-	my $length = length($value);
-	return unless ($length > 0 && $length <= 255);
-      
-	my @bits; 
-	foreach my $label (split('\.', $value, -1)) {
-		my $bit = is_domain_label($label,$opt);	
-		return unless defined $bit;
-		push(@bits, $bit);
-	} 
-	my $tld = $bits[$#bits];
+    my $length = length($value);
+    return unless ( $length > 0 && $length <= 255 );
 
-	#domain_allow_single_label set to true disables this check
-	unless (defined $opt && $opt->{domain_allow_single_label}) {
-		#All domains have more then 1 label (neely.cx good, com not good)
-		return unless (@bits >= 2);
-	}
+    my @bits;
+    foreach my $label ( split( '\.', $value, -1 ) ) {
+        my $bit = is_domain_label( $label, $opt );
+        return unless defined $bit;
+        push( @bits, $bit );
+    }
+    my $tld = $bits[$#bits];
 
-	#If the option to enable domain_private_tld is enabled
-	#and a private domain is specified, then we return if that matches
+    #domain_allow_single_label set to true disables this check
+    unless ( defined $opt && $opt->{domain_allow_single_label} ) {
 
-	if (defined $opt && exists $opt->{domain_private_tld} && ref($opt->{domain_private_tld})) {
-		my $lc_tld = lc($tld);
-		if (ref($opt->{domain_private_tld}) eq 'HASH') {
-			if (exists $opt->{domain_private_tld}->{$lc_tld}) {
-				return join('.', @bits);
-			}
-		} else {
-			if ($tld =~ $opt->{domain_private_tld}) {
-				return join('.', @bits);
-			}
-		}
-	}
+        #All domains have more then 1 label (neely.cx good, com not good)
+        return unless ( @bits >= 2 );
+    }
 
+    #If the option to enable domain_private_tld is enabled
+    #and a private domain is specified, then we return if that matches
 
-	#Verify domain has a valid TLD
-	return  unless tld_exists($tld);
-        
-        return join('.', @bits);
+    if (   defined $opt
+        && exists $opt->{domain_private_tld}
+        && ref( $opt->{domain_private_tld} ) ) {
+        my $lc_tld = lc($tld);
+        if ( ref( $opt->{domain_private_tld} ) eq 'HASH' ) {
+            if ( exists $opt->{domain_private_tld}->{$lc_tld} ) {
+                return join( '.', @bits );
+            }
+        }
+        else {
+            if ( $tld =~ $opt->{domain_private_tld} ) {
+                return join( '.', @bits );
+            }
+        }
+    }
+
+    #Verify domain has a valid TLD
+    return unless tld_exists($tld);
+
+    return join( '.', @bits );
 }
 
 # -------------------------------------------------------------------------------
@@ -317,9 +313,9 @@ sub is_domain {
 =item I<Description>
 
 Returns the untainted hostname if the test value appears to be a well-formed
-hostname. 
+hostname.
 
-Note:  See B<new> for list of options and how those alter the behavior of this 
+Note:  See B<new> for list of options and how those alter the behavior of this
 function.
 
 =item I<Arguments>
@@ -338,7 +334,7 @@ Returns the untainted hostname on success, undef on failure.
 
 =item I<Notes, Exceptions, & Bugs>
 
-The function does not make any attempt to check whether a hostname  
+The function does not make any attempt to check whether a hostname
 actually exists. It only looks to see that the format is appropriate.
 
 Functions much like is_domain, except that it does not verify whether or
@@ -352,30 +348,30 @@ Hostnames might or might not have a valid TLD attached.
 =cut
 
 sub is_hostname {
-        my $self = shift if ref($_[0]); 
-        my $value = shift;
+    my $self = shift if ref( $_[0] );
+    my $value = shift;
 
-        return unless defined($value);
+    return unless defined($value);
 
-	my $opt = (defined $self)?$self:(shift);
+    my $opt = ( defined $self ) ? $self : (shift);
 
-	my $length = length($value);
-	return unless ($length > 0 && $length <= 255);
+    my $length = length($value);
+    return unless ( $length > 0 && $length <= 255 );
 
-#	return is_domain_label($value) unless $value =~ /\./;  #If just a simple hostname
+    #	return is_domain_label($value) unless $value =~ /\./;  #If just a simple hostname
 
-	#Anything past here has multiple bits in it
-	my @bits; 
-	foreach my $label (split('\.', $value, -1)) {
-		my $bit = is_domain_label($label,$opt);	
-		return unless defined $bit;
-		push(@bits, $bit);
-	} 
+    #Anything past here has multiple bits in it
+    my @bits;
+    foreach my $label ( split( '\.', $value, -1 ) ) {
+        my $bit = is_domain_label( $label, $opt );
+        return unless defined $bit;
+        push( @bits, $bit );
+    }
 
-	#We do not verify TLD for hostnames, as hostname.subhost is a valid hostname
+    #We do not verify TLD for hostnames, as hostname.subhost is a valid hostname
 
-        return join('.', @bits);
-	
+    return join( '.', @bits );
+
 }
 
 =pod
@@ -396,9 +392,9 @@ sub is_hostname {
 =item I<Description>
 
 Returns the untainted domain label if the test value appears to be a well-formed
-domain label. 
+domain label.
 
-Note:  See B<new> for list of options and how those alter the behavior of this 
+Note:  See B<new> for list of options and how those alter the behavior of this
 function.
 
 =item I<Arguments>
@@ -422,43 +418,47 @@ actually exists. It only looks to see that the format is appropriate.
 
 =cut
 
-
 sub is_domain_label {
-        my $self = shift if ref($_[0]); 
-        my $value = shift;
+    my $self = shift if ref( $_[0] );
+    my $value = shift;
 
-        return unless defined($value);
+    return unless defined($value);
 
-	#Fix Bug: 41033
-	return if ($value =~ /\n/);
+    #Fix Bug: 41033
+    return if ( $value =~ /\n/ );
 
-	my $opt = (defined $self)?$self:(shift);
+    my $opt = ( defined $self ) ? $self : (shift);
 
-	# bail if we are dealing with more then just a hostname
-	return if ($value =~ /\./);
-	my $length = length($value);
-	my $hostname;
-	if ($length == 1) {
-		if (defined $opt && $opt->{domain_allow_underscore}) {
-			($hostname) = $value =~ /^([\dA-Za-z\_])$/;
-		} else {
-			($hostname) = $value =~ /^([\dA-Za-z])$/;
-		} 
-	} elsif ($length > 1 && $length <= 63) {
-		if (defined $opt && $opt->{domain_allow_underscore}) {
-			($hostname) = $value =~ /^([\dA-Za-z\_][\dA-Za-z\-\_]*[\dA-Za-z])$/;
-		} else {
-			($hostname) = $value =~ /^([\dA-Za-z][\dA-Za-z\-]*[\dA-Za-z])$/;
-		} 
-	} else {
-		return;
-	}
-	return $hostname;
+    # bail if we are dealing with more then just a hostname
+    return if ( $value =~ /\./ );
+    my $length = length($value);
+    my $hostname;
+    if ( $length == 1 ) {
+        if ( defined $opt && $opt->{domain_allow_underscore} ) {
+            ($hostname) = $value =~ /^([\dA-Za-z\_])$/;
+        }
+        else {
+            ($hostname) = $value =~ /^([\dA-Za-z])$/;
+        }
+    }
+    elsif ( $length > 1 && $length <= 63 ) {
+        if ( defined $opt && $opt->{domain_allow_underscore} ) {
+            ($hostname)
+                = $value =~ /^([\dA-Za-z\_][\dA-Za-z\-\_]*[\dA-Za-z])$/;
+        }
+        else {
+            ($hostname) = $value =~ /^([\dA-Za-z][\dA-Za-z\-]*[\dA-Za-z])$/;
+        }
+    }
+    else {
+        return;
+    }
+    return $hostname;
 }
 
 1;
 __END__
-# 
+#
 
 
 
@@ -488,7 +488,7 @@ B<[RFC 1034] [RFC 1035] [RFC 2181] [RFC 1123]>
 
 Neil Neely <F<neil@neely.cx>>.
 
-=head1 ACKNOWLEDGEMENTS 
+=head1 ACKNOWLEDGEMENTS
 
 Thanks to Richard Sonnen <F<sonnen@richardsonnen.com>> for writing the Data::Validate module.
 
@@ -496,7 +496,7 @@ Thanks to Len Reed <F<lreed@levanta.com>> for helping develop the options mechan
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2005-2007 Neil Neely.  
+Copyright (c) 2005-2007 Neil Neely.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.2 or,
