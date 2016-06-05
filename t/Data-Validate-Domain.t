@@ -2,65 +2,114 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test2::Plugin::UTF8;
 
 use Data::Validate::Domain;
 
-is( is_domain_label('www'),   'www',   'is_domain_label www' );
-is( is_domain_label('w-w'),   'w-w',   'is_domain_label w-w' );
-is( is_domain_label('neely'), 'neely', 'is_domain_label neely' );
-is( is_domain_label('com'),   'com',   'is_domain_label com' );
-is( is_domain_label('COM'),   'COM',   'is_domain_label COM' );
-is( is_domain_label('128'),   '128',   'is_domain_label 128' );
-ok( !is_domain_label(q{}),    'is_domain_label ' );
-ok( !is_domain_label('-bob'), 'is_domain_label -bob' );
-ok(
-    !is_domain_label("bengali-\x{09ea}"),
-    'bengali 4 is not accepted in domain label'
-);
+{
+    my @good = qw(
+        www
+        w-w
+        neely
+        com
+        COM
+        128
+    );
 
-#70 character label
-isnt(
-    '1234567890123456789012345678901234567890123456789012345678901234567890',
-    is_domain_label(
-        '1234567890123456789012345678901234567890123456789012345678901234567890'
-    ),
-    'is_domain_label 1234567890123456789012345678901234567890123456789012345678901234567890'
-);
+    for my $l (@good) {
+        my $disp = _display($l);
+        is( is_domain_label($l), $l, qq{$disp is a valid domain label} );
+    }
 
-is( is_domain('www.neely.cx'), 'www.neely.cx', 'is_domain www.neely.cx' );
-ok( !is_domain('www.neely.cx.'),   'is_domain www.neely.cx.' );
-ok( !is_domain('www.neely.cx...'), 'is_domain www.neely.cx...' );
-ok( !is_domain('www.neely.lkj'),   'is_domain www.neely.lkj' );
-is( is_domain('neely.cx'),      'neely.cx',      'is_domain neely.cx' );
-is( is_domain('test-neely.cx'), 'test-neely.cx', 'is_domain test-neely.cx' );
-is( is_domain('aa.com'),        'aa.com',        'is_domain aa.com' );
-is( is_domain('A-A.com'),       'A-A.com',       'is_domain A-A.com' );
-is( is_hostname('aa.com'),      'aa.com',        'is_hostname aa.com' );
-is( is_hostname('aa.bb'),       'aa.bb',         'is_hostname aa.bb' );
-is( is_hostname('aa'),          'aa',            'is_hostname aa' );
-ok( !is_domain('216.17.184.1'),  'is_domain 216.17.184.1' );
-ok( !is_domain('test_neely.cx'), 'is_domain test_neely.cx' );
-ok( !is_domain('.neely.cx'),     'is_domain .neely.cx' );
-ok( !is_domain('-www.neely.cx'), 'is_domain -www.neely.cx' );
-ok( !is_domain('a'),             'is_domain a' );
-ok( !is_domain('.'),             'is_domain .' );
-ok( !is_domain('com.'),          'is_domain com.' );
-ok( !is_domain('com'),           'is_domain com' );
-ok( !is_domain('net'),           'is_domain net' );
-ok( !is_domain('uk'),            'is_domain uk' );
-is( is_domain('co.uk'), 'co.uk', 'is_domain co.uk' );
-ok(
-    !is_domain("bengali-\x{09ea}.com"),
-    'bengali 4 is not accepted in domain'
-);
+    my @bad = (
+        undef,
+        q{},
+        '-bob',
+        "bengali-\x{09ea}",
+        ( 'x' x 70 ),
+        "example\n",
+    );
 
-#280+ character domain
-ok(
-    !is_domain(
-        '123456789012345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890.12345678901234567890123456789012345678901234567890.12345678901234567890123456789012345678901234567890.12345678901234567890123456789012345678901234567890.123456789012345678901234567890.com'
-    ),
-    'is_domain 123456789012345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890.12345678901234567890123456789012345678901234567890.12345678901234567890123456789012345678901234567890.12345678901234567890123456789012345678901234567890.123456789012345678901234567890.com'
-);
+    for my $l (@bad) {
+        my $disp = _display($l);
+        ok( !is_domain_label($l), qq{$disp is not a valid domain label} );
+    }
+}
+
+{
+    my @good = qw(
+        www.neely.cx
+        www.neely.cx.
+        neely.cx
+        neely.cx.
+        test-neely.cx
+        aa.com
+        A-A.com
+        co.uk
+    );
+
+    for my $d (@good) {
+        my $disp = _display($d);
+        is( is_domain($d), $d, qq{$disp is a valid domain} );
+    }
+
+    my @bad = (
+        undef,
+        q{},
+        qw(
+            www.neely.cx...
+            www.neely.lkj
+            216.17.184.1
+            test_neely.cx
+            .neely.cx
+            -www.neely.cx
+            a
+            .
+            com.
+            com
+            net
+            uk
+            neely
+            ),
+        "bengali-\x{09ea}.com"
+    );
+
+    for my $d (@bad) {
+        my $disp = _display($d);
+        ok( !is_domain($d), qq{$disp is not a valid domain} );
+    }
+
+    ok(
+        !is_domain( ( 'x' x 280 ) . '.com' ),
+        '280 characters is not a valid domain'
+    );
+}
+
+{
+    my @good = qw(
+        aa.com
+        aa.bb
+        aa
+    );
+
+    for my $h (@good) {
+        my $disp = _display($h);
+        is( is_hostname($h), $h, qq{$disp is a valid hostname} );
+    }
+
+    my @bad = (
+        undef,
+        q{},
+        'x' x 256,
+        '_foo.bar',
+        "bengali-\x{09ea}.foo"
+    );
+
+    for my $h (@bad) {
+        my $disp = _display($h);
+        ok( !is_hostname($h), qq{$disp is not a valid hostname} );
+    }
+}
 
 #Some additional tests for options
 is(
@@ -84,16 +133,12 @@ is(
     'neely',
     'is_domain neely w/domain_private_tld  and domain_allow_single_label option'
 );
-ok( !is_domain('neely'), 'is_domain neely' );
-isnt( is_hostname('_spf'), '_spf', 'is_hostname("_spf"' );
+
 is(
     is_hostname( '_spf', { domain_allow_underscore => 1 } ),
     '_spf',
     'is_hostname("_spf", {domain_allow_underscore = 1}'
 );
-
-ok( !is_domain("example\n.com"),   'is_domain( "example\n.com")' );
-ok( !is_domain_label("example\n"), 'is_domain_label( "example\n")' );
 
 #precompiled regex format
 is(
@@ -200,3 +245,23 @@ is(
 );
 
 done_testing();
+
+sub _display {
+    my $v = shift;
+
+    return '<undef>' unless defined $v;
+    return q{""} unless length $v;
+
+    if ( length $v > 30 ) {
+        return
+              q{"}
+            . substr( $v, 0, 30 )
+            . q{ ... (}
+            . ( length $v )
+            . q{ chars)"};
+    }
+
+    $v =~ s/\n/\\n/;
+
+    return qq{"$v"};
+}
