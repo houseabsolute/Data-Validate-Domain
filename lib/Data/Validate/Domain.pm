@@ -30,7 +30,7 @@ sub is_domain {
     return unless defined($value);
 
     my $length = length($value);
-    return unless ( $length > 0 && $length <= 255 );
+    return if $length < 0 || $length > 255;
 
     my $trailing_dot = $value =~ s/\.\z// ? q{.} : q{};
 
@@ -46,7 +46,7 @@ sub is_domain {
     unless ( defined $opt && $opt->{domain_allow_single_label} ) {
 
         #All domains have more then 1 label (neely.cx good, com not good)
-        return unless ( @bits >= 2 );
+        return if @bits < 2;
     }
 
     #If the option to enable domain_private_tld is enabled
@@ -82,7 +82,7 @@ sub is_hostname {
     return unless defined($value);
 
     my $length = length($value);
-    return unless ( $length > 0 && $length <= 255 );
+    return if $length < 0 || $length > 255;
 
     #	return is_domain_label($value) unless $value =~ /\./;  #If just a simple hostname
 
