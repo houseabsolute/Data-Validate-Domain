@@ -32,6 +32,8 @@ sub is_domain {
     my $length = length($value);
     return unless ( $length > 0 && $length <= 255 );
 
+    my $trailing_dot = $value =~ s/\.\z// ? q{.} : q{};
+
     my @bits;
     foreach my $label ( split /\./, $value, -1 ) {
         my $bit = is_domain_label( $label, $opt );
@@ -69,7 +71,7 @@ sub is_domain {
     #Verify domain has a valid TLD
     return unless tld_exists($tld);
 
-    return join( '.', @bits );
+    return ( join( '.', @bits ) . $trailing_dot );
 }
 
 # -------------------------------------------------------------------------------
@@ -246,8 +248,10 @@ domain.
 A dotted quad (such as 127.0.0.1) is not considered a domain and will return false.
 See L<Data::Validate::IP> for IP Validation.
 
-This sub does not consider a value ending a period (i.e. "domain.com.") to be
-a valid domain.
+Per RFC 1035, this sub does accept a value ending in a single period
+(i.e. "domain.com.") to be a valid domain. This is called an absolute domain
+name, and should be properly resolved by any DNS tool (tested with C<dig>,
+C<ssh>, and L<Net::DNS>).
 
 =over 4
 

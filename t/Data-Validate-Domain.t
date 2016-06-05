@@ -71,7 +71,7 @@ use Data::Validate::Domain;
             uk
             neely
             ),
-        "bengali-\x{09ea}.com"
+        "bengali-\x{09ea}.com",
     );
 
     for my $d (@bad) {
@@ -102,7 +102,7 @@ use Data::Validate::Domain;
         q{},
         'x' x 256,
         '_foo.bar',
-        "bengali-\x{09ea}.foo"
+        "bengali-\x{09ea}.foo",
     );
 
     for my $h (@bad) {
