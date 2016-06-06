@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.12     2016-06-05
     - Accept trailing dot on a domain name ("example.com."). This is an
       absolute name per RFCs 1034 & 1035, and will be accepted by any DNS
       resolution library or tool. Reported by Rob J. Epping.
