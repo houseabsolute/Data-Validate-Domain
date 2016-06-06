@@ -30,7 +30,9 @@ sub is_domain {
     return unless defined($value);
 
     my $length = length($value);
-    return unless ( $length > 0 && $length <= 255 );
+    return if $length < 0 || $length > 255;
+
+    my $trailing_dot = $value =~ s/\.\z// ? q{.} : q{};
 
     my @bits;
     foreach my $label ( split /\./, $value, -1 ) {
@@ -44,7 +46,7 @@ sub is_domain {
     unless ( defined $opt && $opt->{domain_allow_single_label} ) {
 
         #All domains have more then 1 label (neely.cx good, com not good)
-        return unless ( @bits >= 2 );
+        return if @bits < 2;
     }
 
     #If the option to enable domain_private_tld is enabled
@@ -69,7 +71,7 @@ sub is_domain {
     #Verify domain has a valid TLD
     return unless tld_exists($tld);
 
-    return join( '.', @bits );
+    return ( join( '.', @bits ) . $trailing_dot );
 }
 
 # -------------------------------------------------------------------------------
@@ -80,7 +82,7 @@ sub is_hostname {
     return unless defined($value);
 
     my $length = length($value);
-    return unless ( $length > 0 && $length <= 255 );
+    return if $length < 0 || $length > 255;
 
     #	return is_domain_label($value) unless $value =~ /\./;  #If just a simple hostname
 
@@ -246,8 +248,10 @@ domain.
 A dotted quad (such as 127.0.0.1) is not considered a domain and will return false.
 See L<Data::Validate::IP> for IP Validation.
 
-This sub does not consider a value ending a period (i.e. "domain.com.") to be
-a valid domain.
+Per RFC 1035, this sub does accept a value ending in a single period
+(i.e. "domain.com.") to be a valid domain. This is called an absolute domain
+name, and should be properly resolved by any DNS tool (tested with C<dig>,
+C<ssh>, and L<Net::DNS>).
 
 =over 4
 

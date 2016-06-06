@@ -1,4 +1,7 @@
 {{$NEXT}}
+    - Accept trailing dot on a domain name ("example.com."). This is an
+      absolute name per RFCs 1034 & 1035, and will be accepted by any DNS
+      resolution library or tool. Reported by Rob J. Epping.
 
 0.11     2015-05-05
     - Don't allow non-ASCII digits in domain labels, RT #103121.
