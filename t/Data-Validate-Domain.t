@@ -46,6 +46,11 @@ use Data::Validate::Domain;
         aa.com
         A-A.com
         co.uk
+        domain.com
+        a.domain.co
+        foo--bar.com
+        xn--froschgrn-x9a.com
+        rebecca.blackfriday
     );
 
     for my $d (@good) {
@@ -63,6 +68,13 @@ use Data::Validate::Domain;
             test_neely.cx
             .neely.cx
             -www.neely.cx
+            abc
+            256.0.0.0
+            _.com
+            *.some.com
+            s!ome.com
+            domain.com/
+            /more.com
             a
             .
             com.
@@ -88,6 +100,7 @@ use Data::Validate::Domain;
 {
     my @good = qw(
         aa.com
+        aa.com.
         aa.bb
         aa
     );
@@ -125,7 +138,8 @@ is(
 );
 is(
     is_domain(
-        'neely', {
+        'neely',
+        {
             domain_allow_single_label => 1,
             domain_private_tld        => { 'neely' => 1 }
         }
