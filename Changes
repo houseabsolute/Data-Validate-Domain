@@ -1,5 +1,10 @@
 {{$NEXT}}
-    - Accept trailing dot on hostnames as well.
+    - Accept trailing dot on hostnames as well. Implemented by Greg
+      Oschwald. GitHub #6.
+    - The option domain_disable_tld_validation was added to allow disabling
+      TLD validation. This may be useful if you need to check domains with new
+      gTLDs that have not yet been added to Net::Domain::TLD. Implemented by Greg
+      Oschwald. GitHub #8.
 
 0.12     2016-06-05
     - Accept trailing dot on a domain name ("example.com."). This is an
