@@ -1,5 +1,7 @@
 package Data::Validate::Domain;
 
+our $VERSION = '0.121';
+
 use strict;
 use warnings;
 
@@ -14,7 +16,6 @@ our @EXPORT = qw(
     is_domain_label
 );
 
-our $VERSION = '0.13';
 
 sub new {
     my $class = shift;
@@ -39,6 +40,8 @@ sub is_domain {
         #All domains have more then 1 label (neely.cx good, com not good)
         return if @{$bits} < 2;
     }
+
+    return $hostname if $opt->{domain_disable_tld_validation};
 
     #If the option to enable domain_private_tld is enabled
     #and a private domain is specified, then we return if that matches
@@ -209,6 +212,12 @@ has a single label i.e. "neely.cx" is good, but "com" would fail. If you set
 this option to a true value then C<is_domain()> will allow single label
 domains through. This is most likely to be useful in combination with
 the C<domain_private_tld> argument.
+
+=item * domain_disable_tld_validation
+
+Disables TLD validation for C<is_domain()>. This may be useful if you need to
+check domains with new gTLDs that have not yet been added to
+L<Net::Domain::TLD>.
 
 =item * domain_private_tld
 

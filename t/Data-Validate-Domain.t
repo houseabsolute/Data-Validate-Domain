@@ -126,6 +126,12 @@ use Data::Validate::Domain;
 
 #Some additional tests for options
 is(
+    is_domain( 'domain.invalidtld', { domain_disable_tld_validation => 1 } ),
+    'domain.invalidtld',
+    'domain_disable_tld_validation disables TLD validation'
+);
+
+is(
     is_domain( 'myhost.neely', { domain_private_tld => { 'neely' => 1 } } ),
     'myhost.neely',
     'is_domain myhost.neely w/domain_private_tld option'

@@ -4,7 +4,7 @@ Data::Validate::Domain - Domain and host name validation
 
 # VERSION
 
-version 0.12
+version 0.121
 
 # SYNOPSIS
 
@@ -59,6 +59,12 @@ This method constructs a validation object. It accepts the following arguments:
     this option to a true value then `is_domain()` will allow single label
     domains through. This is most likely to be useful in combination with
     the `domain_private_tld` argument.
+
+- domain\_disable\_tld\_validation
+
+    Disables TLD validation for `is_domain()`. This may be useful if you need to
+    check domains with new gTLDs that have not yet been added to
+    [Net::Domain::TLD](https://metacpan.org/pod/Net::Domain::TLD).
 
 - domain\_private\_tld
 
@@ -181,9 +187,10 @@ I am also usually active on IRC as 'drolsky' on `irc://irc.perl.org`.
 - Neil Neely <neil@neely.cx>
 - Dave Rolsky <autarch@urth.org>
 
-# CONTRIBUTOR
+# CONTRIBUTORS
 
-David Steinbrunner <dsteinbrunner@pobox.com>
+- David Steinbrunner <dsteinbrunner@pobox.com>
+- Gregory Oschwald <goschwald@maxmind.com>
 
 # COPYRIGHT AND LICENCE
 
