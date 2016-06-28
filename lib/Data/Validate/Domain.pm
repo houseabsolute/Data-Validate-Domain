@@ -1,5 +1,7 @@
 package Data::Validate::Domain;
 
+our $VERSION = '0.121';
+
 use strict;
 use warnings;
 
@@ -14,7 +16,6 @@ our @EXPORT = qw(
     is_domain_label
 );
 
-our $VERSION = '0.13';
 
 sub new {
     my $class = shift;
@@ -26,6 +27,61 @@ sub new {
 
 sub is_domain {
     my ( $value, $opt ) = _maybe_oo(@_);
+
+    my ( $hostname, $bits ) = _domain_labels( $value, $opt );
+
+    return unless $bits;
+
+    my $tld = $bits->[-1];
+
+    #domain_allow_single_label set to true disables this check
+    unless ( defined $opt && $opt->{domain_allow_single_label} ) {
+
+        #All domains have more then 1 label (neely.cx good, com not good)
+        return if @{$bits} < 2;
+    }
+
+    return $hostname if $opt->{domain_disable_tld_validation};
+
+    #If the option to enable domain_private_tld is enabled
+    #and a private domain is specified, then we return if that matches
+
+    if (   defined $opt
+        && exists $opt->{domain_private_tld}
+        && ref( $opt->{domain_private_tld} ) ) {
+        my $lc_tld = lc($tld);
+        if ( ref( $opt->{domain_private_tld} ) eq 'HASH' ) {
+            if ( exists $opt->{domain_private_tld}->{$lc_tld} ) {
+                return $hostname;
+            }
+        }
+        else {
+            if ( $tld =~ $opt->{domain_private_tld} ) {
+                return $hostname;
+            }
+        }
+    }
+
+    #Verify domain has a valid TLD
+    return unless tld_exists($tld);
+
+    return $hostname;
+}
+
+# -------------------------------------------------------------------------------
+
+sub is_hostname {
+    my ( $value, $opt ) = _maybe_oo(@_);
+
+    my ($hostname) = _domain_labels( $value, $opt );
+
+    #We do not verify TLD for hostnames, as hostname.subhost is a valid hostname
+
+    return $hostname;
+}
+
+sub _domain_labels {
+    my ( $value, $opt ) = @_;
 
     return unless defined($value);
 
@@ -40,64 +96,10 @@ sub is_domain {
         return unless defined $bit;
         push( @bits, $bit );
     }
-    my $tld = $bits[-1];
 
-    #domain_allow_single_label set to true disables this check
-    unless ( defined $opt && $opt->{domain_allow_single_label} ) {
+    return unless @bits;
 
-        #All domains have more then 1 label (neely.cx good, com not good)
-        return if @bits < 2;
-    }
-
-    #If the option to enable domain_private_tld is enabled
-    #and a private domain is specified, then we return if that matches
-
-    if (   defined $opt
-        && exists $opt->{domain_private_tld}
-        && ref( $opt->{domain_private_tld} ) ) {
-        my $lc_tld = lc($tld);
-        if ( ref( $opt->{domain_private_tld} ) eq 'HASH' ) {
-            if ( exists $opt->{domain_private_tld}->{$lc_tld} ) {
-                return join( '.', @bits );
-            }
-        }
-        else {
-            if ( $tld =~ $opt->{domain_private_tld} ) {
-                return join( '.', @bits );
-            }
-        }
-    }
-
-    #Verify domain has a valid TLD
-    return unless tld_exists($tld);
-
-    return ( join( '.', @bits ) . $trailing_dot );
-}
-
-# -------------------------------------------------------------------------------
-
-sub is_hostname {
-    my ( $value, $opt ) = _maybe_oo(@_);
-
-    return unless defined($value);
-
-    my $length = length($value);
-    return if $length < 0 || $length > 255;
-
-    #	return is_domain_label($value) unless $value =~ /\./;  #If just a simple hostname
-
-    #Anything past here has multiple bits in it
-    my @bits;
-    foreach my $label ( split /\./, $value, -1 ) {
-        my $bit = is_domain_label( $label, $opt );
-        return unless defined $bit;
-        push( @bits, $bit );
-    }
-
-    #We do not verify TLD for hostnames, as hostname.subhost is a valid hostname
-
-    return join( '.', @bits );
-
+    return ( join( '.', @bits ) . $trailing_dot, \@bits );
 }
 
 sub is_domain_label {
@@ -210,6 +212,12 @@ has a single label i.e. "neely.cx" is good, but "com" would fail. If you set
 this option to a true value then C<is_domain()> will allow single label
 domains through. This is most likely to be useful in combination with
 the C<domain_private_tld> argument.
+
+=item * domain_disable_tld_validation
+
+Disables TLD validation for C<is_domain()>. This may be useful if you need to
+check domains with new gTLDs that have not yet been added to
+L<Net::Domain::TLD>.
 
 =item * domain_private_tld
 
