@@ -33,15 +33,15 @@ sub is_domain {
 
     my $tld = $bits->[-1];
 
-    #domain_allow_single_label set to true disables this check
+    # domain_allow_single_label set to true disables this check
     unless ( defined $opt && $opt->{domain_allow_single_label} ) {
 
-        #All domains have more then 1 label (neely.cx good, com not good)
+        # All domains have more then 1 label (neely.cx good, com not good)
         return if @{$bits} < 2;
     }
 
-    #If the option to enable domain_private_tld is enabled
-    #and a private domain is specified, then we return if that matches
+    # If the option to enable domain_private_tld is enabled
+    # and a private domain is specified, then we return if that matches
 
     if (   defined $opt
         && exists $opt->{domain_private_tld}
@@ -59,7 +59,7 @@ sub is_domain {
         }
     }
 
-    #Verify domain has a valid TLD
+    # Verify domain has a valid TLD
     return unless tld_exists($tld);
 
     return $hostname;
@@ -72,7 +72,7 @@ sub is_hostname {
 
     my ($hostname) = _domain_labels( $value, $opt );
 
-    #We do not verify TLD for hostnames, as hostname.subhost is a valid hostname
+    # We do not verify TLD for hostnames, as hostname.subhost is a valid hostname
 
     return $hostname;
 }
@@ -104,7 +104,7 @@ sub is_domain_label {
 
     return unless defined($value);
 
-    #Fix Bug: 41033
+    # Fix Bug: 41033
     return if ( $value =~ /\n/ );
 
     # bail if we are dealing with more then just a hostname
