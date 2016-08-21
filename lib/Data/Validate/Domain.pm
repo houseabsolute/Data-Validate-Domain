@@ -34,7 +34,7 @@ sub is_domain {
     my $tld = $bits->[-1];
 
     # domain_allow_single_label set to true disables this check
-    unless ( defined $opt && $opt->{domain_allow_single_label} ) {
+    unless (  $opt->{domain_allow_single_label} ) {
 
         # All domains have more then 1 label (neely.cx good, com not good)
         return if @{$bits} < 2;
@@ -43,8 +43,7 @@ sub is_domain {
     # If the option to enable domain_private_tld is enabled
     # and a private domain is specified, then we return if that matches
 
-    if (   defined $opt
-        && exists $opt->{domain_private_tld}
+    if (   exists $opt->{domain_private_tld}
         && ref( $opt->{domain_private_tld} ) ) {
         my $lc_tld = lc($tld);
         if ( ref( $opt->{domain_private_tld} ) eq 'HASH' ) {
@@ -112,7 +111,7 @@ sub is_domain_label {
     my $length = length($value);
     my $hostname;
     if ( $length == 1 ) {
-        if ( defined $opt && $opt->{domain_allow_underscore} ) {
+        if ( $opt->{domain_allow_underscore} ) {
             ($hostname) = $value =~ /^([0-9A-Za-z\_])$/;
         }
         else {
@@ -120,7 +119,7 @@ sub is_domain_label {
         }
     }
     elsif ( $length > 1 && $length <= 63 ) {
-        if ( defined $opt && $opt->{domain_allow_underscore} ) {
+        if ( $opt->{domain_allow_underscore} ) {
             ($hostname)
                 = $value =~ /^([0-9A-Za-z\_][0-9A-Za-z\-\_]*[0-9A-Za-z])$/;
         }
@@ -140,7 +139,7 @@ sub _maybe_oo {
         return @_[ 1, 0 ];
     }
     else {
-        return @_[ 0, 1 ];
+        return ( $_[0], ( defined $_[1] ? $_[1] : {} ) );
     }
 }
 
