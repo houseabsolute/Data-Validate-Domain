@@ -3,7 +3,7 @@ package Data::Validate::Domain;
 use strict;
 use warnings;
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 use Net::Domain::TLD qw(tld_exists);
 
