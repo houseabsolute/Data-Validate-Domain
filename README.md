@@ -4,7 +4,7 @@ Data::Validate::Domain - Domain and host name validation
 
 # VERSION
 
-version 0.121
+version 0.13
 
 # SYNOPSIS
 
@@ -192,7 +192,7 @@ I am also usually active on IRC as 'drolsky' on `irc://irc.perl.org`.
 - David Steinbrunner <dsteinbrunner@pobox.com>
 - Gregory Oschwald <goschwald@maxmind.com>
 
-# COPYRIGHT AND LICENCE
+# COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Neil Neely.
 

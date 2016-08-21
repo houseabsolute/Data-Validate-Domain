@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.13     2016-08-21
     - Accept trailing dot on hostnames as well. Implemented by Greg
       Oschwald. GitHub #6.
     - The option domain_disable_tld_validation was added to allow disabling

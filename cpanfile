@@ -7,7 +7,7 @@ on 'test' => sub {
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
   requires "Test2::Plugin::UTF8" => "0";
-  requires "Test::More" => "0.96";
+  requires "Test::More" => "1.302015";
 };
 
 on 'test' => sub {
@@ -38,6 +38,7 @@ on 'develop' => sub {
   requires "Test::Pod::Coverage" => "1.08";
   requires "Test::Pod::LinkCheck" => "0";
   requires "Test::Pod::No404s" => "0";
+  requires "Test::Portability::Files" => "0";
   requires "Test::Spelling" => "0.12";
   requires "Test::Vars" => "0.009";
   requires "Test::Version" => "1";
