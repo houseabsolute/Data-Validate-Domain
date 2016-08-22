@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.14     2016-08-21
     - Require Net::Domain::TLD 1.74. This fixes some failures seen on CPAN
       Testers, and if you're validating domains you really want the latest
       version of this module.

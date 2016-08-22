@@ -1,5 +1,5 @@
 requires "Exporter" => "0";
-requires "Net::Domain::TLD" => "0";
+requires "Net::Domain::TLD" => "1.74";
 requires "strict" => "0";
 requires "warnings" => "0";
 

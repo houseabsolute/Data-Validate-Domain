@@ -4,7 +4,7 @@ Data::Validate::Domain - Domain and host name validation
 
 # VERSION
 
-version 0.13
+version 0.14
 
 # SYNOPSIS
 
