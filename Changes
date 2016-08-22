@@ -1,4 +1,7 @@
 {{$NEXT}}
+    - Require Net::Domain::TLD 1.74. This fixes some failures seen on CPAN
+      Testers, and if you're validating domains you really want the latest
+      version of this module.
 
 0.13     2016-08-21
     - Accept trailing dot on hostnames as well. Implemented by Greg

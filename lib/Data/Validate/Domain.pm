@@ -5,7 +5,7 @@ use warnings;
 
 our $VERSION = '0.14';
 
-use Net::Domain::TLD qw(tld_exists);
+use Net::Domain::TLD 1.74 qw(tld_exists);
 
 use Exporter qw( import );
 
