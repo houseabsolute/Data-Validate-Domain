@@ -200,7 +200,7 @@ This method constructs a validation object. It accepts the following arguments:
 According to RFC underscores are forbidden in hostnames but not domain names.
 By default C<is_domain()>, C<is_domain_label()>, and C<is_hostname()> will
 fail if the value to be checked includes underscores. Setting this to a true
-value with allow the use of underscores in all functions.
+value will allow the use of underscores in all functions.
 
 =item * domain_allow_single_label
 
