@@ -82,10 +82,20 @@ sub _domain_labels {
 
     return unless defined($value);
 
-    my $length = length($value);
-    return if $length < 0 || $length > 255;
+    # FYI: DNS limits names to 255 octets, encoded to RDATA. Each label
+    # includes a length-octet prefix; those length octets count against the
+    # 255-octet maximum. The number of labels exceeds the number of dots by 1
+    # (assuming no trailing dot), and the number of length octets exceeds
+    # number of labels by 1 (since there’s always a trailing NUL octet). The
+    # effective limit is thus 255 - 1 - 1, or 253. See
+    # https://devblogs.microsoft.com/oldnewthing/20120412-00/?p=7873 for a
+    # more detailed explanation of this.
 
     my $trailing_dot = $value =~ s/\.\z// ? q{.} : q{};
+
+    my $encoded_length = ( $trailing_dot ? 1 : 2 ) + length($value);
+
+    return if $encoded_length > 255;
 
     my @bits;
     foreach my $label ( split /\./, $value, -1 ) {
