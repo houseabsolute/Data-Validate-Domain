@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.15     2021-08-21
     - Reject domains with 254 or more characters. Domains are limited to 255
       octets, but in practice this means they're actually limited to 253
       characters. See
