@@ -196,8 +196,8 @@ C<is_domain_label('0')> will return a defined but false value.
 
 The value to test is always the first (and often only) argument.
 
-Note that none of these functions test whether a domain or hostname is
-actually resolvable or reachable.
+Note that none of these functions test whether a domain or hostname is actually
+resolvable or reachable.
 
 =head2 Data::Validate::Domain->new()
 
@@ -208,17 +208,17 @@ This method constructs a validation object. It accepts the following arguments:
 =item * domain_allow_underscore
 
 According to RFC underscores are forbidden in hostnames but not domain names.
-By default C<is_domain()>, C<is_domain_label()>, and C<is_hostname()> will
-fail if the value to be checked includes underscores. Setting this to a true
-value will allow the use of underscores in all functions.
+By default C<is_domain()>, C<is_domain_label()>, and C<is_hostname()> will fail
+if the value to be checked includes underscores. Setting this to a true value
+will allow the use of underscores in all functions.
 
 =item * domain_allow_single_label
 
 By default C<is_domain()> will fail if you ask it to verify a domain that only
 has a single label i.e. "neely.cx" is good, but "com" would fail. If you set
-this option to a true value then C<is_domain()> will allow single label
-domains through. This is most likely to be useful in combination with
-the C<domain_private_tld> argument.
+this option to a true value then C<is_domain()> will allow single label domains
+through. This is most likely to be useful in combination with the
+C<domain_private_tld> argument.
 
 =item * domain_disable_tld_validation
 
@@ -228,15 +228,15 @@ L<Net::Domain::TLD>.
 
 =item * domain_private_tld
 
-By default C<is_domain()> requires all domains to have a valid public TLD
-(i.e. com, net, org, uk, etc). This is verified using the L<Net::Domain::TLD>
-module. This behavior can be extended in two different ways. You can provide
-either a hash reference where additional TLDs are keys or you can supply a
-regular expression.
+By default C<is_domain()> requires all domains to have a valid public TLD (i.e.
+com, net, org, uk, etc). This is verified using the L<Net::Domain::TLD> module.
+This behavior can be extended in two different ways. You can provide either a
+hash reference where additional TLDs are keys or you can supply a regular
+expression.
 
 NOTE: The TLD is normalized to the lower case form prior to the check being
-done. This is done only for the TLD check, and does not alter the output in
-any way.
+done. This is done only for the TLD check, and does not alter the output in any
+way.
 
 Hashref example:
 
@@ -254,19 +254,19 @@ Regular expression example:
 =head2 is_domain($domain, \%options)
 
 This can be called as either a subroutine or a method. If called as a sub, you
-can pass any of the arguments accepted by the constructor as options. If
-called as a method, any additional options are ignored.
+can pass any of the arguments accepted by the constructor as options. If called
+as a method, any additional options are ignored.
 
 This returns the untainted domain name if the given C<$domain> is a valid
 domain.
 
-A dotted quad (such as 127.0.0.1) is not considered a domain and will return false.
-See L<Data::Validate::IP> for IP Validation.
+A dotted quad (such as 127.0.0.1) is not considered a domain and will return
+false. See L<Data::Validate::IP> for IP Validation.
 
-Per RFC 1035, this sub does accept a value ending in a single period
-(i.e. "domain.com.") to be a valid domain. This is called an absolute domain
-name, and should be properly resolved by any DNS tool (tested with C<dig>,
-C<ssh>, and L<Net::DNS>).
+Per RFC 1035, this sub does accept a value ending in a single period (i.e.
+"domain.com.") to be a valid domain. This is called an absolute domain name,
+and should be properly resolved by any DNS tool (tested with C<dig>, C<ssh>,
+and L<Net::DNS>).
 
 =over 4
 
@@ -308,8 +308,8 @@ C<ssh>, and L<Net::DNS>).
 =head2 is_hostname($hostname, \%options)
 
 This can be called as either a subroutine or a method. If called as a sub, you
-can pass any of the arguments accepted by the constructor as options. If
-called as a method, any additional options are ignored.
+can pass any of the arguments accepted by the constructor as options. If called
+as a method, any additional options are ignored.
 
 This returns the untainted hostname if the given C<$hostname> is a valid
 hostname.
@@ -319,11 +319,10 @@ Hostnames are not required to end in a valid TLD.
 =head2 is_domain_label($label, \%options)
 
 This can be called as either a subroutine or a method. If called as a sub, you
-can pass any of the arguments accepted by the constructor as options. If
-called as a method, any additional options are ignored.
+can pass any of the arguments accepted by the constructor as options. If called
+as a method, any additional options are ignored.
 
-This returns the untainted label if the given C<$label> is a valid
-label.
+This returns the untainted label if the given C<$label> is a valid label.
 
 A domain label is simply a single piece of a domain or hostname. For example,
 the "www.foo.com" hostname contains the labels "www", "foo", and "com".
@@ -342,9 +341,11 @@ B<[RFC 1034] [RFC 1035] [RFC 2181] [RFC 1123]>
 
 =head1 ACKNOWLEDGEMENTS
 
-Thanks to Richard Sonnen <F<sonnen@richardsonnen.com>> for writing the Data::Validate module.
+Thanks to Richard Sonnen <F<sonnen@richardsonnen.com>> for writing the
+Data::Validate module.
 
-Thanks to Len Reed <F<lreed@levanta.com>> for helping develop the options mechanism for Data::Validate modules.
+Thanks to Len Reed <F<lreed@levanta.com>> for helping develop the options
+mechanism for Data::Validate modules.
 
 =cut
 
