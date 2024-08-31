@@ -3,7 +3,7 @@ package Data::Validate::Domain;
 use strict;
 use warnings;
 
-our $VERSION = '0.16';
+our $VERSION = '0.15';
 
 use Net::Domain::TLD 1.74 qw(tld_exists);
 
@@ -162,7 +162,15 @@ __END__
 
 =pod
 
-=for test_synopsis my ($suspect, %options);
+=encoding UTF-8
+
+=head1 NAME
+
+Data::Validate::Domain - Domain and host name validation
+
+=head1 VERSION
+
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -184,6 +192,8 @@ __END__
 =head1 DESCRIPTION
 
 This module offers a few subroutines for validating domain and host names.
+
+=for test_synopsis my ($suspect, %options);
 
 =head1 FUNCTIONS
 
@@ -333,9 +343,9 @@ B<[RFC 1034] [RFC 1035] [RFC 2181] [RFC 1123]>
 
 =over 4
 
-=item  L<Data::Validate>
+=item L<Data::Validate>
 
-=item  L<Data::Validate::IP>
+=item L<Data::Validate::IP>
 
 =back
 
@@ -347,5 +357,62 @@ Data::Validate module.
 Thanks to Len Reed <F<lreed@levanta.com>> for helping develop the options
 mechanism for Data::Validate modules.
 
-=cut
+=head1 SUPPORT
 
+Bugs may be submitted at L<https://github.com/houseabsolute/Data-Validate-Domain/issues>.
+
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Data-Validate-Domain can be found at L<https://github.com/houseabsolute/Data-Validate-Domain>.
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Neil Neely <neil@neely.cx>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=back
+
+=head1 CONTRIBUTORS
+
+=for stopwords Anirvan Chatterjee David Steinbrunner Felipe Gasper Gregory Oschwald
+
+=over 4
+
+=item *
+
+Anirvan Chatterjee <anirvan@users.noreply.github.com>
+
+=item *
+
+David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+Felipe Gasper <felipe@felipegasper.com>
+
+=item *
+
+Gregory Oschwald <goschwald@maxmind.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2021 by Neil Neely.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
+
+=cut
