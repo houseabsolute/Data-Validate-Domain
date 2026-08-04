@@ -1,0 +1,4 @@
+# "Signes" is Ricardo Signes. "ome" appears inside test domain-name data.
+[default.extend-words]
+Signes = "Signes"
+ome = "ome"
