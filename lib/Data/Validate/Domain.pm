@@ -40,6 +40,9 @@ sub is_domain {
         return if @{$bits} < 2;
     }
 
+    # reject all-decimal names
+    return unless grep /[^0-9]/, @{$bits};
+
     return $hostname if $opt->{domain_disable_tld_validation};
 
     # If the option to enable domain_private_tld is enabled

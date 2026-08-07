@@ -140,6 +140,12 @@ is(
 );
 
 is(
+    is_domain( '216.17.184.1', { domain_disable_tld_validation => 1 } ),
+    undef,
+    'domain_disable_tld_validation does not allow IPv4 addresses to become valid',
+);
+
+is(
     is_domain( 'myhost.neely', { domain_private_tld => { 'neely' => 1 } } ),
     'myhost.neely',
     'is_domain myhost.neely w/domain_private_tld option'
